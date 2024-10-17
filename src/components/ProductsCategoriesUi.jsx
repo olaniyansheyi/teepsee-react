@@ -10,9 +10,18 @@ import { useMenu } from "@/contexts/MenuContext";
 import { useNavigate, NavLink } from "react-router-dom";
 import ProductContainer from "@/components/ProductContainer";
 import RecentProductList from "@/components/RecentProductList";
+import { useParams } from "react-router-dom";
 
 const ProuctCategoriesUi = ({ currentCategory }) => {
-  const { selectPriceRange, setPriceRange } = useProducts();
+  const { category } = useParams();
+
+  const {
+    selectPriceRange,
+    applyPriceFilter,
+    setPriceRange,
+    clearProductFilter,
+  } = useProducts();
+
   const { handleToggleMenu } = useMenu();
 
   const navigate = useNavigate();
@@ -28,16 +37,16 @@ const ProuctCategoriesUi = ({ currentCategory }) => {
     navigate(route);
   };
 
-  const onSetPriceRange = (e) => {
-    e.preventDefault();
+  const onSetPriceRange = () => {
+    clearProductFilter(category);
     const min = parseFloat(minPrice) || 0;
     const max = parseFloat(maxPrice) || Infinity;
-    setPriceRange(min, max);
-    setMinPrice("");
-    setMaxPrice("");
+    setPriceRange({ min, max });
+    applyPriceFilter(min, max);
   };
 
   const onSelectPriceRange = (range) => {
+    clearProductFilter(category);
     selectPriceRange(range);
   };
 
@@ -109,7 +118,10 @@ const ProuctCategoriesUi = ({ currentCategory }) => {
                 <h1 className="text-lg">Custom Price range</h1>
                 <form
                   className="flex gap-x-1 w-full"
-                  onSubmit={onSetPriceRange}
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    onSetPriceRange();
+                  }}
                 >
                   <input
                     type="text"
@@ -133,6 +145,7 @@ const ProuctCategoriesUi = ({ currentCategory }) => {
                   </button>
                 </form>
               </div>
+
               <div className="me-auto space-y-1 tracking-wider">
                 <h1 className="text-lg">Prices</h1>
                 <div className="flex gap-y-4 flex-col w-full justify-end items-start font-semibold text-md">
@@ -140,25 +153,25 @@ const ProuctCategoriesUi = ({ currentCategory }) => {
                     <input
                       type="radio"
                       name="priceRange"
-                      onClick={() => onSelectPriceRange("under10000")}
+                      onClick={() => onSelectPriceRange("under100")}
                     />
-                    <p>Under #10,000</p>
+                    <p>Under #100.00</p>
                   </div>
                   <div className="flex justify-center items-center gap-x-3">
                     <input
                       type="radio"
                       name="priceRange"
-                      onClick={() => onSelectPriceRange("10000to50000")}
+                      onClick={() => onSelectPriceRange("100to200")}
                     />
-                    <p>#10,000-#50,000</p>
+                    <p>#100.00-#200.00</p>
                   </div>
                   <div className="flex justify-center items-center gap-x-3">
                     <input
                       type="radio"
                       name="priceRange"
-                      onClick={() => onSelectPriceRange("51000to150000")}
+                      onClick={() => onSelectPriceRange("201to1000")}
                     />
-                    <p>#51,000-#150,000</p>
+                    <p>#201.00-#1,000.00</p>
                   </div>
                 </div>
               </div>

@@ -13,6 +13,7 @@ function ProductsProvider({ children }) {
   const [selectedPriceRange, setSelectedPriceRange] = useState(null);
   const [searchedProducts, setSearchedProducts] = useState([]);
   const [recentlyViewedProducts, setRecentlyViewedProducts] = useState([]);
+
   const { category } = useParams();
 
   useEffect(() => {
